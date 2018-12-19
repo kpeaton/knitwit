@@ -1,11 +1,36 @@
 function knitImage = knitwit(imageFile, varargin)
-%knitwit   Create your own Winter Bash knitted image.
+%knitwit   Create your own Winter Bash 2018 knitted image.
+%   KNITIMG = knitwit(IMAGEFILE) will load the image data in file IMAGEFILE
+%   and resize, pad, and recolor the image to create an output image
+%   KNITIMG that mimics what would be created by the Winter Bash 2018
+%   knitting tool.
 %
-%   
+%   KNITIMG = knitwit(IMAGEDATA) will use the image data in IMAGEDATA
+%   instead of loading from a file. IMAGEDATA must be an N-by-M-by-3
+%   matrix.
+%
+%   KNITIMG = knitwit(..., 'PropertyName', PropertyValue, ...) will modify
+%   how the images are generated based on the property/value pairs
+%   specified. Valid properties that the user can set are:
+%
+%     'BackFill'    - A logical value determining if the code will attempt
+%                     to identify a background solid color (abutting the
+%                     borders) and fill it with the default blue background
+%                     value. Default is FALSE.
+%     'Dither'      - A logical value determining if dithering will be used
+%                     when performing color quantization. Default is FALSE.
+%     'AddKnit'     - A logical value determining if the knit pattern will
+%                     be added to the image created. A value of FALSE will
+%                     create a resampled, color-quantized image that can be
+%                     uploaded to the Winter Bash 2018 knitting tool to add
+%                     the pattern. Default is TRUE.
+%
+%   See also ind2rgb.
 
 % Author: Ken Eaton
 % Version: MATLAB R2016b
 % Last modified: 12/19/18
+% Copyright 2018 by Kenneth P. Eaton
 %--------------------------------------------------------------------------
 
   % Parse input arguments:
@@ -121,7 +146,8 @@ function isValid = validImage(imageInput)
   if ischar(imageInput)
     isValid = (exist(imageInput, 'file') == 2);
   elseif isnumeric(imageInput) 
-    isValid = ~isempty(imageInput) && (size(imageInput, 3) == 3);
+    isValid = ~isempty(imageInput) && (ndims(imageInput) == 3) && ...
+              (size(imageInput, 3) == 3);
   else
     isValid = false;
   end
